@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Qibla Finder - Prayer Times, Qibla Compass & Islamic App</title>
+
+  <meta name="description" content="Download Qibla Finder, your Islamic companion app with accurate Qibla direction, prayer times, Quran, Daily Duas, Tasbeeh counter, 99 Names of Allah, and Hijri Calendar." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #0D1821;
+      --secondary: #1B263B;
+      --accent: #E0A800;
+      --accent-light: #ffd35a;
+      --white: #ffffff;
+      --muted: #9CA3AF;
+      --soft-bg: #f8fafc;
+      --card: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.16);
+      --shadow: 0 24px 70px rgba(13, 24, 33, 0.18);
+      --radius: 26px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--soft-bg);
+      color: var(--primary);
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1180px, 92%);
+      margin: auto;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1180px, 92%);
+      z-index: 99;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(13, 24, 33, 0.08);
+      border-radius: 999px;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 14px 40px rgba(13, 24, 33, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #fff2b8);
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      box-shadow: 0 0 24px rgba(224, 168, 0, 0.45);
+      animation: glowPulse 2.6s infinite ease-in-out;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .nav-btn,
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      transition: 0.3s ease;
+    }
+
+    .nav-btn {
+      padding: 12px 18px;
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .nav-btn:hover,
+    .primary-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 34px rgba(224, 168, 0, 0.28);
+    }
+
+    .hero {
+      min-height: 100vh;
+      padding: 150px 0 80px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(224,168,0,0.24), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,0.16), transparent 28%),
+        linear-gradient(135deg, #0D1821 0%, #152438 48%, #1B263B 100%);
+      color: var(--white);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(3px);
+      opacity: 0.45;
+      animation: floatShape 8s ease-in-out infinite;
+    }
+
+    .shape-1 {
+      width: 130px;
+      height: 130px;
+      background: var(--accent);
+      top: 18%;
+      right: 9%;
+    }
+
+    .shape-2 {
+      width: 90px;
+      height: 90px;
+      background: #ffffff;
+      bottom: 20%;
+      left: 6%;
+      animation-delay: 1.5s;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 60px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff7d7;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero h1 {
+      font-size: clamp(42px, 7vw, 76px);
+      line-height: 1.02;
+      letter-spacing: -2.5px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 span {
+      color: var(--accent-light);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: #dbe6f3;
+      font-size: 18px;
+      line-height: 1.8;
+      margin-bottom: 34px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .primary-btn {
+      padding: 16px 26px;
+      background: var(--accent);
+      color: var(--primary);
+      box-shadow: 0 18px 40px rgba(224,168,0,0.24);
+    }
+
+    .secondary-btn {
+      padding: 16px 24px;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .secondary-btn:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.14);
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .stat-pill {
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #edf4ff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .phone-card {
+      max-width: 390px;
+      margin-left: auto;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 42px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      animation: phoneFloat 5s ease-in-out infinite;
+    }
+
+    .phone-screen {
+      border-radius: 32px;
+      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+      overflow: hidden;
+      color: var(--primary);
+      padding: 22px;
+      min-height: 570px;
+      position: relative;
+    }
+
+    .phone-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .app-title {
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .mini-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: var(--accent);
+    }
+
+    .compass-box {
+      height: 230px;
+      border-radius: 50%;
+      width: 230px;
+      margin: 20px auto;
+      background:
+        radial-gradient(circle, #ffffff 38%, #eef2f7 39%, #ffffff 60%),
+        conic-gradient(from 0deg, #f8fafc, #e2e8f0, #f8fafc);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: inset 0 0 0 12px #f1f5f9, 0 20px 45px rgba(13,24,33,0.12);
+    }
+
+    .compass-box::before {
+      content: "QIBLA";
+      position: absolute;
+      top: 18px;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .needle {
+      width: 12px;
+      height: 126px;
+      background: linear-gradient(to bottom, var(--accent), var(--primary));
+      border-radius: 999px;
+      transform-origin: center bottom;
+      animation: needleMove 3s ease-in-out infinite;
+      box-shadow: 0 0 24px rgba(224,168,0,0.45);
+    }
+
+    .kaaba {
+      position: absolute;
+      bottom: 35px;
+      width: 48px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--primary);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .prayer-list {
+      margin-top: 24px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .prayer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 15px;
+      border-radius: 17px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(13,24,33,0.06);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .prayer-row span {
+      color: #64748b;
+      font-weight: 700;
+    }
+
+    .section {
+      padding: 100px 0;
+    }
+
+    .section-header {
+      max-width: 760px;
+      text-align: center;
+      margin: 0 auto 54px;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      border-radius: 999px;
+      background: rgba(224,168,0,0.14);
+      color: #8a6500;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -1.3px;
+      margin-bottom: 18px;
+    }
+
+    .section-header p {
+      color: #64748b;
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+
+    .feature-card {
+      position: relative;
+      min-height: 250px;
+      padding: 28px;
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: 0 20px 50px rgba(13,24,33,0.08);
+      overflow: hidden;
+      transition: 0.35s ease;
+      border: 1px solid rgba(13,24,33,0.06);
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(224,168,0,0.13);
+      right: -55px;
+      bottom: -55px;
+      transition: 0.35s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 28px 70px rgba(13,24,33,0.14);
+    }
+
+    .feature-card:hover::after {
+      transform: scale(1.3);
+      background: rgba(224,168,0,0.22);
+    }
+
+    .feature-icon {
+      position: relative;
+      z-index: 2;
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: var(--accent);
+      font-size: 25px;
+      margin-bottom: 22px;
+      box-shadow: 0 16px 28px rgba(13,24,33,0.18);
+    }
+
+    .feature-card h3 {
+      position: relative;
+      z-index: 2;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      position: relative;
+      z-index: 2;
+      color: #64748b;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .about {
+      background: var(--white);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+      min-height: 460px;
+      border-radius: 36px;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(224,168,0,0.35), transparent 30%),
+        linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 34px;
+      color: var(--white);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .about-visual::before {
+      content: "☪";
+      position: absolute;
+      right: 28px;
+      top: 8px;
+      font-size: 170px;
+      opacity: 0.08;
+    }
+
+    .visual-card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(12px);
+      animation: cardFloat 4s ease-in-out infinite;
+    }
+
+    .visual-card:nth-child(2) {
+      animation-delay: 0.8s;
+      margin-left: 44px;
+    }
+
+    .visual-card:nth-child(3) {
+      animation-delay: 1.4s;
+    }
+
+    .visual-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent-light);
+      font-size: 18px;
+    }
+
+    .visual-card p {
+      color: #dbe6f3;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .about-content h2 {
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.14;
+      letter-spacing: -1.2px;
+      margin-bottom: 22px;
+    }
+
+    .about-content p {
+      color: #64748b;
+      font-size: 17px;
+      line-height: 1.85;
+      margin-bottom: 24px;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 25px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .check-item i {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(224,168,0,0.16);
+      color: #9a7000;
+      font-size: 14px;
+    }
+
+    .download {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(224,168,0,0.25), transparent 28%),
+        linear-gradient(135deg, #0D1821, #1B263B);
+      color: var(--white);
+    }
+
+    .download-card {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 860px;
+      margin: auto;
+      padding: 68px 42px;
+      border-radius: 42px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
+
+    .download-card h2 {
+      font-size: clamp(34px, 5vw, 56px);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -1.4px;
+    }
+
+    .download-card p {
+      color: #dbe6f3;
+      font-size: 17px;
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 17px 26px;
+      border-radius: 18px;
+      background: var(--white);
+      color: var(--primary);
+      font-weight: 900;
+      transition: 0.3s ease;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+    }
+
+    .store-btn:hover {
+      transform: translateY(-5px) scale(1.03);
+    }
+
+    .store-btn i {
+      font-size: 30px;
+      color: #22c55e;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .faq-item {
+      background: var(--white);
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(13,24,33,0.07);
+      border: 1px solid rgba(13,24,33,0.06);
+      transition: 0.3s ease;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-7px);
+    }
+
+    .faq-item h3 {
+      font-size: 19px;
+      margin-bottom: 12px;
+    }
+
+    .faq-item p {
+      color: #64748b;
+      line-height: 1.7;
+    }
+
+    footer {
+      background: #071018;
+      color: var(--white);
+      padding: 34px 0;
+      text-align: center;
+    }
+
+    footer p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        box-shadow: 0 0 18px rgba(224,168,0,0.35);
+      }
+      50% {
+        box-shadow: 0 0 34px rgba(224,168,0,0.75);
+      }
+    }
+
+    @keyframes floatShape {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+      }
+      50% {
+        transform: translateY(-28px) translateX(18px);
+      }
+    }
+
+    @keyframes phoneFloat {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-18px) rotate(1.5deg);
+      }
+    }
+
+    @keyframes needleMove {
+      0%, 100% {
+        transform: rotate(-18deg);
+      }
+      50% {
+        transform: rotate(18deg);
+      }
+    }
+
+    @keyframes cardFloat {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-card {
+        margin: 20px auto 0;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        top: 10px;
+        padding: 12px 14px;
+      }
+
+      .brand span {
+        font-size: 14px;
+      }
+
+      .nav-btn {
+        padding: 10px 13px;
+        font-size: 13px;
+      }
+
+      .hero {
+        padding-top: 125px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.2px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .hero-actions {
+        align-items: stretch;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+
+      .features-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phone-screen {
+        min-height: auto;
+      }
+
+      .compass-box {
+        width: 190px;
+        height: 190px;
+      }
+
+      .needle {
+        height: 105px;
+      }
+
+      .section {
+        padding: 74px 0;
+      }
+
+      .about-visual {
+        min-height: auto;
+      }
+
+      .visual-card:nth-child(2) {
+        margin-left: 0;
+      }
+
+      .download-card {
+        padding: 46px 22px;
+        border-radius: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <a href="#" class="brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-kaaba"></i>
+      </div>
+      <span>Qibla Finder</span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
+    </div>
+
+    <a class="nav-btn" href="https://play.google.com/store/apps/details?id=com.msappcraft.qiblafinder&hl=en" target="_blank">
+      <i class="fa-brands fa-google-play"></i>
+      Download
+    </a>
+  </nav>
+
+  <header class="hero">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span>🌙</span>
+          Your Daily Islamic Companion
+        </div>
+
+        <h1>
+          Find Qibla, Prayer Times & Quran in One App
+        </h1>
+
+        <p>
+          Qibla Finder helps you stay connected to your faith with accurate Qibla direction,
+          prayer time alerts, Quran reading, Daily Duas, Tasbeeh counter, 99 Names of Allah,
+          and Hijri Calendar support.
+        </p>
+
+        <div class="hero-actions">
+          <a class="primary-btn" href="https://play.google.com/store/apps/details?id=com.msappcraft.qiblafinder&hl=en" target="_blank">
+            <i class="fa-brands fa-google-play"></i>
+            Download on Google Play
+          </a>
+
+          <a class="secondary-btn" href="#features">
+            <i class="fa-solid fa-arrow-down"></i>
+            Explore Features
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-pill">🧭 Accurate Qibla Compass</div>
+          <div class="stat-pill">🕌 Prayer Time Alerts</div>
+          <div class="stat-pill">📖 Quran & Duas</div>
+        </div>
+      </div>
+
+      <div class="phone-card">
+        <div class="phone-screen">
+          <div class="phone-top">
+            <div>
+              <div class="app-title">Qibla Finder</div>
+              <small>Islamic Tools App</small>
+            </div>
+            <div class="mini-icon">
+              <i class="fa-solid fa-mosque"></i>
+            </div>
+          </div>
+
+          <div class="compass-box">
+            <div class="needle"></div>
+            <div class="kaaba">
+              <i class="fa-solid fa-kaaba"></i>
+            </div>
+          </div>
+
+          <div class="prayer-list">
+            <div class="prayer-row">
+              <strong>Fajr</strong>
+              <span>05:12 AM</span>
+            </div>
+            <div class="prayer-row">
+              <strong>Dhuhr</strong>
+              <span>12:36 PM</span>
+            </div>
+            <div class="prayer-row">
+              <strong>Asr</strong>
+              <span>04:48 PM</span>
+            </div>
+            <div class="prayer-row">
+              <strong>Maghrib</strong>
+              <span>07:16 PM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-star"></i>
+          App Features
+        </div>
+        <h2>Everything You Need for Daily Islamic Guidance</h2>
+        <p>
+          Qibla Finder brings important Islamic tools into one simple and beautiful Android app,
+          designed for home, work, travel, and daily worship.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-compass"></i>
+          </div>
+          <h3>Qibla Direction</h3>
+          <p>
+            Find the correct Qibla direction using GPS and phone sensors with a clean compass interface.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <h3>Prayer Times</h3>
+          <p>
+            View accurate prayer timings based on your location and receive Azan alerts for daily Salah.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-book-quran"></i>
+          </div>
+          <h3>Quran</h3>
+          <p>
+            Read and explore the Quran anytime, anywhere, directly from your mobile device.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-hands-praying"></i>
+          </div>
+          <h3>Daily Duas</h3>
+          <p>
+            Follow daily duas and azkaar to improve your spiritual routine and stay closer to faith.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-circle-dot"></i>
+          </div>
+          <h3>Tasbeeh Counter</h3>
+          <p>
+            Count Dhikr and Tasbeeh easily with a simple digital counter made for daily worship.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <h3>99 Names of Allah</h3>
+          <p>
+            Learn and read the beautiful 99 Names of Allah with meanings inside the app.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-calendar-days"></i>
+          </div>
+          <h3>Hijri Calendar</h3>
+          <p>
+            Track Islamic dates, events, and important days with the Hijri and Islamic Calendar.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+          </div>
+          <h3>Beautiful Interface</h3>
+          <p>
+            Enjoy a clean Islamic design with easy navigation, smooth tools, and simple daily use.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about" id="about">
+    <div class="container about-grid">
+      <div class="about-visual">
+        <div class="visual-card">
+          <strong>🧭 Accurate Direction</strong>
+          <p>Use the Qibla compass to find the correct direction for prayer wherever you are.</p>
+        </div>
+
+        <div class="visual-card">
+          <strong>🕌 Prayer Routine</strong>
+          <p>Stay updated with daily Salah timings and Azan alerts based on your location.</p>
+        </div>
+
+        <div class="visual-card">
+          <strong>📿 Daily Worship</strong>
+          <p>Use Quran, duas, azkaar, Tasbeeh counter, and Islamic calendar tools in one app.</p>
+        </div>
+      </div>
+
+      <div class="about-content">
+        <h2>A Simple Islamic App Made for Everyday Life</h2>
+        <p>
+          Qibla Finder is designed to make daily Islamic practices easy, accurate, and convenient.
+          Whether you are traveling, at home, or at work, the app helps you find the Qibla direction,
+          follow prayer timings, read Quran, and use useful spiritual tools from one place.
+        </p>
+
+        <p>
+          The app is helpful for Muslims who want a clean, reliable, and easy-to-use Islamic companion
+          on their Android phone.
+        </p>
+
+        <div class="check-list">
+          <div class="check-item">
+            <i class="fa-solid fa-check"></i>
+            Works for travel, home, office, and daily prayer routine.
+          </div>
+          <div class="check-item">
+            <i class="fa-solid fa-check"></i>
+            Includes essential Islamic tools in one lightweight app.
+          </div>
+          <div class="check-item">
+            <i class="fa-solid fa-check"></i>
+            Designed with a clean and peaceful Islamic user experience.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section download" id="download">
+    <div class="container">
+      <div class="download-card">
+        <h2>Download Qibla Finder Today</h2>
+        <p>
+          Get accurate Qibla direction, prayer time alerts, Quran, Daily Duas, Tasbeeh Counter,
+          99 Names of Allah, and Hijri Calendar in one Islamic companion app.
+        </p>
+
+        <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.msappcraft.qiblafinder&hl=en" target="_blank">
+          <i class="fa-brands fa-google-play"></i>
+          <span>
+            Get it on<br>
+            <strong>Google Play</strong>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-badge">
+          <i class="fa-solid fa-circle-question"></i>
+          FAQ
+        </div>
+        <h2>Frequently Asked Questions</h2>
+        <p>
+          Learn more about how Qibla Finder helps with prayer, Quran reading, Duas, and daily Islamic guidance.
+        </p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h3>What is Qibla Finder?</h3>
+          <p>
+            Qibla Finder is an Islamic companion app that helps users find Qibla direction, check prayer times,
+            read Quran, use Daily Duas, count Tasbeeh, and follow the Hijri Calendar.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Does the app show prayer times?</h3>
+          <p>
+            Yes. The app shows prayer timings based on your location and supports Azan alerts for daily Salah.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Can I use it for Dhikr and Tasbeeh?</h3>
+          <p>
+            Yes. Qibla Finder includes a Tasbeeh Counter that helps you count Dhikr and Tasbeeh easily.
+          </p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Where can I download the app?</h3>
+          <p>
+            You can download Qibla Finder from Google Play using the download button on this page.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>
+        © 2026 Qibla Finder. All rights reserved. Designed for daily Islamic guidance.
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
